@@ -9,7 +9,7 @@ def email():
 
     # configurações de envio de e-mail
     remetente = 'monitoramento.tarifador@gmail.com'
-    destinatario = 'icaropython@gmail.com'
+    destinatario = 'suporte.tarifador@gmail.com'
     senha = "zsgvmuwbugwuxhwl"
 
     # construção do e-mail
