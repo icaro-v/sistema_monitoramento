@@ -46,6 +46,16 @@ SELECT MAX(NREG) MAXNREG
     if (int(lig_duplicadas) > 0):
         cur.execute("SELECT public.p_remove_duplicada();")
 
+
+    cur.execute("select distinct extract(day from teldata) from cadcha")
+    lista = cur.fetchall()
+    dias = []
+
+    for dia in lista:
+        dias.append(int(dia[0]))
+    
+    dias = sorted(dias)
+
     return f"""
 FLUXO DE LIGAÇÕES
     Período: {periodo}
@@ -54,4 +64,5 @@ FLUXO DE LIGAÇÕES
     Ligações de saída: {lig_saida}
     Ligações duplicadas: {lig_duplicadas}
     Quantidade de ramais: {qtde_ram}
+    Dias tarifados: {dias}
     """
