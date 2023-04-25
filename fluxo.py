@@ -4,23 +4,23 @@ def monitora():
     import conn
 
     ano = datetime.now().year
-    mes = datetime.now().month - 1
-    ultimo_dia_mes = calendar.monthrange(ano, mes)[1]
-    periodo = f"01/{mes:02}/{ano} - {ultimo_dia_mes}/{mes:02}/{ano}"
+    mes_anterior = datetime.now().month - 1
+    ultimo_dia_mes_anterior = calendar.monthrange(ano, mes_anterior)[1]
+    periodo = f"01/{mes_anterior:02}/{ano} - {ultimo_dia_mes_anterior}/{mes_anterior:02}/{ano}"
 
     cur = conn.conexao_bd.cursor()
     
-    cur.execute(f"select count(*) from cadcha where teldata between '{ano}-{mes}-01' and '{ano}-{mes}-{ultimo_dia_mes}'" )
+    cur.execute(f"select count(*) from cadcha where teldata between '{ano}-{mes_anterior}-01' and '{ano}-{mes_anterior}-{ultimo_dia_mes_anterior}'" )
     lig_mensais = cur.fetchall()[0][0]
 
     cur.execute('SELECT count(*) FROM cadram')
     qtde_ram = cur.fetchall()[0][0]
     qtde_ram = f'{qtde_ram:02}'
 
-    cur.execute(f"select count(*) from cadcha c where teldata between '{ano}-{mes}-01' and '{ano}-{mes}-{ultimo_dia_mes}' and aorecebida = 'S'")
+    cur.execute(f"select count(*) from cadcha c where teldata between '{ano}-{mes_anterior}-01' and '{ano}-{mes_anterior}-{ultimo_dia_mes_anterior}' and aorecebida = 'S'")
     lig_entrada = cur.fetchall()[0][0]
 
-    cur.execute(f"select count(*) from cadcha c where teldata between '{ano}-{mes}-01' and '{ano}-{mes}-{ultimo_dia_mes}' and aorecebida = 'N'")
+    cur.execute(f"select count(*) from cadcha c where teldata between '{ano}-{mes_anterior}-01' and '{ano}-{mes_anterior}-{ultimo_dia_mes_anterior}' and aorecebida = 'N'")
     lig_saida = cur.fetchall()[0][0]
     
     cur.execute(f"""select count(*) from (
@@ -47,7 +47,7 @@ SELECT MAX(NREG) MAXNREG
         cur.execute("SELECT public.p_remove_duplicada();")
 
 
-    cur.execute("select distinct extract(day from teldata) from cadcha")
+    cur.execute(f"select distinct extract(day from teldata) from cadcha where teldata between '{ano}-{mes_anterior}-01' and '{ano}-{mes_anterior}-{ultimo_dia_mes_anterior}'")
     lista = cur.fetchall()
     dias = []
 
