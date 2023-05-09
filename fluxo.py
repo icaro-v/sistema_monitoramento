@@ -4,7 +4,8 @@ def monitora():
     import conn
 
     ano = datetime.now().year
-    mes_anterior = datetime.now().month - 1
+    mes_monitorado = datetime.now().month
+    mes_anterior = mes_monitorado - 1
     ultimo_dia_mes_anterior = calendar.monthrange(ano, mes_anterior)[1]
     periodo = f"01/{mes_anterior:02}/{ano} - {ultimo_dia_mes_anterior}/{mes_anterior:02}/{ano}"
 
@@ -55,6 +56,15 @@ SELECT MAX(NREG) MAXNREG
         dias.append(int(dia[0]))
     
     dias = sorted(dias)
+
+    cur.execute(f"""update monitoramento SET periodo = '{periodo}', 
+    fluxo = {lig_mensais},
+    entrada = {lig_entrada},
+    saida = {lig_saida},
+    duplicada = {lig_duplicadas},
+    qtde_ram = {qtde_ram},
+    dias = '{dias}' WHERE mes_monitorado = {mes_monitorado} ;""")
+    conn.conexao_bd.commit()
 
     return f"""
 FLUXO DE LIGAÇÕES
