@@ -1,15 +1,14 @@
 import conn
-from datetime import datetime
+from datas import datas
+from time import sleep
 
 cur = conn.conexao_bd.cursor()
 cur.execute("select mes_monitorado from monitoramento")
-mes_bd = cur.fetchall()[-1][0]
+mes_bd = max(cur.fetchall())[0]
 
-mes_atual = datetime.now().month
+sleep(2)
 
-if (mes_bd == mes_atual):
-    pass
-else:
+if (mes_bd != datas.mes_atual[1:-1]):
     import rotina, fluxo, infra, envia
 
     msg1 = rotina.monitora()
