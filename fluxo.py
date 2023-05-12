@@ -1,33 +1,26 @@
 def monitora():
-    import calendar
-    from datetime import datetime
     import conn
-
-    ano = datetime.now().year
-    mes_monitorado = datetime.now().month
-    mes_anterior = mes_monitorado - 1
-    ultimo_dia_mes_anterior = calendar.monthrange(ano, mes_anterior)[1]
-    periodo = f"01/{mes_anterior:02}/{ano} - {ultimo_dia_mes_anterior}/{mes_anterior:02}/{ano}"
+    from datas import datas
 
     cur = conn.conexao_bd.cursor()
     
-    cur.execute(f"select count(*) from cadcha where teldata between '{ano}-{mes_anterior}-01' and '{ano}-{mes_anterior}-{ultimo_dia_mes_anterior}'" )
+    cur.execute(f"select count(*) from cadcha where teldata between {datas.periodoSQL}" )
     lig_mensais = cur.fetchall()[0][0]
 
     cur.execute('SELECT count(*) FROM cadram')
     qtde_ram = cur.fetchall()[0][0]
     qtde_ram = f'{qtde_ram:02}'
 
-    cur.execute(f"select count(*) from cadcha c where teldata between '{ano}-{mes_anterior}-01' and '{ano}-{mes_anterior}-{ultimo_dia_mes_anterior}' and aorecebida = 'S'")
+    cur.execute(f"select count(*) from cadcha c where teldata between {datas.periodoSQL} and aorecebida = 'S'")
     lig_entrada = cur.fetchall()[0][0]
 
-    cur.execute(f"select count(*) from cadcha c where teldata between '{ano}-{mes_anterior}-01' and '{ano}-{mes_anterior}-{ultimo_dia_mes_anterior}' and aorecebida = 'N'")
+    cur.execute(f"select count(*) from cadcha c where teldata between {datas.periodoSQL} and aorecebida = 'N'")
     lig_saida = cur.fetchall()[0][0]
     
     cur.execute(f"""select count(*) from (
 SELECT MAX(NREG) MAXNREG
                FROM CADCHA
-              
+              WHERE teldata >= '01/01/{datas.ano}'
               GROUP BY RAMALDESTINO,
                        TELEFONE,
                        CIDADE,
@@ -48,7 +41,7 @@ SELECT MAX(NREG) MAXNREG
         cur.execute("SELECT public.p_remove_duplicada();")
 
 
-    cur.execute(f"select distinct extract(day from teldata) from cadcha where teldata between '{ano}-{mes_anterior}-01' and '{ano}-{mes_anterior}-{ultimo_dia_mes_anterior}'")
+    cur.execute(f"select distinct extract(day from teldata) from cadcha where teldata between {datas.periodoSQL}")
     lista = cur.fetchall()
     dias = []
 
@@ -57,18 +50,18 @@ SELECT MAX(NREG) MAXNREG
     
     dias = sorted(dias)
 
-    cur.execute(f"""update monitoramento SET periodo = '{periodo}', 
+    cur.execute(f"""update monitoramento SET periodo = '{datas.periodo}', 
     fluxo = {lig_mensais},
     entrada = {lig_entrada},
     saida = {lig_saida},
     duplicada = {lig_duplicadas},
     qtde_ram = {qtde_ram},
-    dias = '{dias}' WHERE mes_monitorado = {mes_monitorado} ;""")
+    dias = '{dias}' WHERE mes_monitorado = {datas.mes_atual};""")
     conn.conexao_bd.commit()
 
     return f"""
 FLUXO DE LIGAÇÕES
-    Período: {periodo}
+    Período: {datas.periodo}
     Fluxo mensal de ligações: {lig_mensais}
     Ligações de entrada: {lig_entrada}
     Ligações de saída: {lig_saida}
