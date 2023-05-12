@@ -1,7 +1,10 @@
 import psycopg2
+import socket
+
+ip_local = socket.gethostbyname(socket.gethostname())
 
 # define os parâmetros de conexão
-host = '192.168.32.38'
+host = 'ip_local'
 database = 'Tarifador'
 user = 'postgres'
 password = 'Supinf12!'
