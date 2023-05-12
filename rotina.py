@@ -2,8 +2,8 @@ def monitora():
     import os, conn
     from glob import glob
     from datetime import datetime
+    from datas import datas
 
-    mes_monitorado = datetime.now().month
     cur = conn.conexao_bd.cursor()
 
     #configurando nome/local do arquivo de backup
@@ -20,7 +20,7 @@ def monitora():
         hora_ultimo_bkp = data_hora_ultimo_bkp.strftime('%Hh%M')
         dia_ultimo_bkp = data_hora_ultimo_bkp.strftime('%d/%m/%Y')         
 
-        cur.execute(f"insert into monitoramento (mes_monitorado, dt_ultimo_bkp, hr_ultimo_bkp, local_bkp) values ({mes_monitorado}, '{dia_ultimo_bkp}', '{hora_ultimo_bkp}', '{pasta_backup}');")
+        cur.execute(f"insert into monitoramento (mes_monitorado, dt_ultimo_bkp, hr_ultimo_bkp, local_bkp) values ({datas.mes_atual}, '{dia_ultimo_bkp}', '{hora_ultimo_bkp}', '{pasta_backup}');")
         conn.conexao_bd.commit()
         
         return f"""\nROTINA DE BACKUP 
@@ -29,7 +29,7 @@ def monitora():
     Local de armazenamento: {pasta_backup}"""
 
     else:
-        cur.execute(f"insert into monitoramento (mes_monitorado, dt_ultimo_bkp, hr_ultimo_bkp, local_bkp) values ({int(mes_monitorado)}, '-', '-', 'Sem backup');")
+        cur.execute(f"insert into monitoramento (mes_monitorado, dt_ultimo_bkp, hr_ultimo_bkp, local_bkp) values ({datas.mes_atual}, '-', '-', 'Sem backup');")
         conn.conexao_bd.commit()
 
         return f"""\nROTINA DE BACKUP
