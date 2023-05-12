@@ -25,4 +25,3 @@ class Meses_e_Ano:
         self.periodoSQL = f"'{self.ano}-{self.mes_anterior}-01' and '{self.ano}-{self.mes_anterior}-{self.ultimo_dia_mes_anterior}'"
 
 datas = Meses_e_Ano()
-

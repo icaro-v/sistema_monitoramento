@@ -4,7 +4,7 @@ import socket
 ip_local = socket.gethostbyname(socket.gethostname())
 
 # define os parâmetros de conexão
-host = 'ip_local'
+host = ip_local
 database = 'Tarifador'
 user = 'postgres'
 password = 'Supinf12!'

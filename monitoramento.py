@@ -1,10 +1,10 @@
-import conn
+import conn, datas, envia, fluxo, infra, rotina
 from datas import datas
 from time import sleep
 
 cur = conn.conexao_bd.cursor()
-cur.execute("select mes_monitorado from monitoramento")
-mes_bd = max(cur.fetchall())[0]
+cur.execute("select MAX(mes_monitorado) from monitoramento")
+mes_bd = cur.fetchall()[0][0]
 
 sleep(2)
 
