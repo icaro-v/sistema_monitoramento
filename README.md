@@ -1,6 +1,6 @@
 # soma-tarifador-monitorador
 
-O monitorador foi feito para poupar tempo e automaizar o monitoramento mensal realizado nos clientes APST do Soma Tarifador.
+O monitorador foi feito para poupar tempo e automatizar o monitoramento mensal realizado nos clientes APST do Soma Tarifador.
 
 A automação verifica:
  - o espaço disponível no disco onde foi instalado o tarifador

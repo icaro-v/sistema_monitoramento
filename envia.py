@@ -10,7 +10,7 @@ def email():
     # configurações de envio de e-mail
     remetente = 'monitoramento.tarifador@gmail.com'
     destinatario = 'suporte.tarifador@gmail.com'
-    senha = "zsgvmuwbugwuxhwl"
+    senha = "*********"
 
     # construção do e-mail
     msg = MIMEMultipart() 
